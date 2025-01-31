@@ -1,0 +1,104 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <title>Reverb and Delay Time Calculator</title>
+    <style>
+        body {
+            background-color: #121212;
+            color: #ffffff;
+            font-family: Arial, sans-serif;
+            text-align: center;
+            padding: 50px;
+        }
+        h1 {
+            margin-bottom: 40px;
+        }
+        input[type="number"] {
+            padding: 10px;
+            font-size: 18px;
+            width: 200px;
+            margin-bottom: 20px;
+            background-color: #1e1e1e;
+            color: #ffffff;
+            border: none;
+            border-radius: 5px;
+        }
+        button {
+            padding: 10px 20px;
+            font-size: 18px;
+            background-color: #6200ee;
+            color: #ffffff;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+        button:hover {
+            background-color: #3700b3;
+        }
+        .results {
+            margin-top: 40px;
+        }
+        table {
+            margin: 0 auto;
+            border-collapse: collapse;
+            font-size: 18px;
+            width: 80%;
+        }
+        th, td {
+            border: 1px solid #ffffff;
+            padding: 12px;
+        }
+        th {
+            background-color: #1e1e1e;
+        }
+        tr:nth-child(even) {
+            background-color: #2c2c2c;
+        }
+    </style>
+</head>
+<body>
+    <h1>Reverb and Delay Time Calculator</h1>
+    <p>Enter the tempo (BPM):</p>
+    <input type="number" id="tempo" placeholder="Tempo in BPM">
+    <br>
+    <button onclick="calculateTimes()">Calculate</button>
+    <div class="results" id="results"></div>
+
+    <script>
+        function calculateTimes() {
+            const tempo = document.getElementById('tempo').value;
+            if (!tempo || tempo <= 0) {
+                alert('Please enter a valid tempo.');
+                return;
+            }
+
+            const beatDuration = 60000 / tempo; // Duration of a quarter note in milliseconds
+
+            const notes = [
+                { name: 'Whole Note', multiplier: 4 },
+                { name: 'Half Note', multiplier: 2 },
+                { name: 'Quarter Note', multiplier: 1 },
+                { name: 'Eighth Note', multiplier: 0.5 },
+                { name: 'Sixteenth Note', multiplier: 0.25 },
+                { name: 'Thirty-Second Note', multiplier: 0.125 },
+                { name: 'Dotted Quarter Note', multiplier: 1.5 },
+                { name: 'Dotted Eighth Note', multiplier: 0.75 },
+                { name: 'Triplet Quarter Note', multiplier: 0.6667 },
+                { name: 'Triplet Eighth Note', multiplier: 0.3333 }
+            ];
+
+            let table = '<table><tr><th>Note Length</th><th>Time (ms)</th></tr>';
+
+            notes.forEach(note => {
+                const time = beatDuration * note.multiplier;
+                table += `<tr><td>${note.name}</td><td>${time.toFixed(2)}</td></tr>`;
+            });
+
+            table += '</table>';
+
+            document.getElementById('results').innerHTML = table;
+        }
+    </script>
+</body>
+</html>
