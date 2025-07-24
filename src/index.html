@@ -154,6 +154,184 @@
             grid-column: 1 / -1;
         }
         
+        .delay-grid {
+            display: grid;
+            grid-template-columns: 1fr;
+            gap: 0.5rem;
+            margin-bottom: 1rem;
+        }
+        
+        .delay-item {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 0.5rem 0;
+        }
+        
+        .delay-label {
+            color: #b8b8b8;
+            font-weight: 500;
+        }
+        
+        .delay-value {
+            color: #667eea;
+            font-weight: 600;
+        }
+        
+        .multitap-container {
+            display: grid;
+            grid-template-columns: 1fr;
+            gap: 0.5rem;
+        }
+        
+        .audio-math-results {
+            display: grid;
+            grid-template-columns: 1fr;
+            gap: 0.5rem;
+            margin-bottom: 1rem;
+        }
+        
+        .math-result {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 0.5rem 0;
+        }
+        
+        .math-label {
+            color: #b8b8b8;
+            font-weight: 500;
+        }
+        
+        .math-value {
+            color: #667eea;
+            font-weight: 600;
+        }
+        
+        select {
+            width: 120px;
+            padding: 8px 12px;
+            font-size: 1rem;
+            background: rgba(255, 255, 255, 0.1);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            border-radius: 8px;
+            color: #ffffff;
+            transition: all 0.3s ease;
+        }
+        
+        select:focus {
+            outline: none;
+            border-color: #667eea;
+            box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.2);
+        }
+        
+        select option {
+            background: #1a1a2e;
+            color: #ffffff;
+        }
+        
+        .reference-grid {
+            display: grid;
+            grid-template-columns: 1fr;
+            gap: 0.5rem;
+            margin-bottom: 1rem;
+        }
+        
+        .ref-item {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 0.5rem 0;
+        }
+        
+        .ref-label {
+            color: #b8b8b8;
+            font-weight: 500;
+        }
+        
+        .ref-value {
+            color: #667eea;
+            font-weight: 600;
+        }
+        
+        .swing-results, .sync-results, .golden-results {
+            display: grid;
+            grid-template-columns: 1fr;
+            gap: 0.5rem;
+            margin-bottom: 1rem;
+        }
+        
+        .harmonics-grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 0.5rem;
+            margin-top: 1rem;
+        }
+        
+        .harmonic-item {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 0.3rem 0;
+            font-size: 0.9rem;
+        }
+        
+        .room-modes {
+            display: grid;
+            grid-template-columns: 1fr;
+            gap: 0.3rem;
+            margin-top: 1rem;
+            max-height: 150px;
+            overflow-y: auto;
+        }
+        
+        .room-mode-item {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 0.2rem 0;
+            font-size: 0.85rem;
+        }
+        
+        .tabs {
+            display: flex;
+            justify-content: center;
+            margin-bottom: 2rem;
+            flex-wrap: wrap;
+            gap: 0.5rem;
+        }
+        
+        .tab {
+            padding: 12px 24px;
+            background: rgba(255, 255, 255, 0.1);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            border-radius: 25px;
+            color: #b8b8b8;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            font-weight: 500;
+            white-space: nowrap;
+        }
+        
+        .tab:hover {
+            background: rgba(255, 255, 255, 0.15);
+            color: #ffffff;
+        }
+        
+        .tab.active {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: #ffffff;
+            border-color: transparent;
+        }
+        
+        .tab-content {
+            display: none;
+        }
+        
+        .tab-content.active {
+            display: block;
+        }
+        
         @media (max-width: 768px) {
             .grid {
                 grid-template-columns: 1fr;
@@ -180,54 +358,559 @@
     <div class="container">
         <h1>Studio Assistant</h1>
         
-        <div class="grid">
-            <div class="section timing-section">
-                <h2>Tempo-Based Timing</h2>
-                <input type="number" id="tempo" class="tempo-input" placeholder="Enter BPM" min="0" oninput="calculateTimes()">
-                <div class="table-container">
-                    <table>
-                        <thead>
-                            <tr>
-                                <th>Note Length</th>
-                                <th>Time (ms)</th>
-                            </tr>
-                        </thead>
-                        <tbody id="tableBody">
-                            <!-- Table rows will be populated here -->
-                        </tbody>
-                    </table>
+        <div class="tabs">
+            <div class="tab active" onclick="switchTab('timing')">Timing & Effects</div>
+            <div class="tab" onclick="switchTab('sampling')">Sampling & Pitch</div>
+            <div class="tab" onclick="switchTab('music')">Music Theory</div>
+            <div class="tab" onclick="switchTab('technical')">Technical</div>
+            <div class="tab" onclick="switchTab('reference')">References</div>
+        </div>
+
+        <!-- Timing & Effects Tab -->
+        <div class="tab-content active" id="timing">
+            <div class="grid">
+                <div class="section timing-section">
+                    <h2>Tempo-Based Timing</h2>
+                    <input type="number" id="tempo" class="tempo-input" placeholder="Enter BPM" min="0" oninput="calculateTimes(); calculatePreDelay();">
+                    
+                    <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 2rem; margin-top: 2rem;">
+                        <div class="table-container">
+                            <h3 style="text-align: center; margin-bottom: 1rem; font-size: 1.2rem;">Note Values</h3>
+                            <table>
+                                <thead>
+                                    <tr>
+                                        <th>Note Length</th>
+                                        <th>Time (ms)</th>
+                                    </tr>
+                                </thead>
+                                <tbody id="tableBody">
+                                    <!-- Table rows will be populated here -->
+                                </tbody>
+                            </table>
+                        </div>
+                        
+                        <div class="table-container">
+                            <h3 style="text-align: center; margin-bottom: 1rem; font-size: 1.2rem;">Reverb Pre-Delay</h3>
+                            <table>
+                                <thead>
+                                    <tr>
+                                        <th>Note Length</th>
+                                        <th>Pre-Delay (ms)</th>
+                                    </tr>
+                                </thead>
+                                <tbody id="preDelayTableBody">
+                                    <!-- Pre-delay rows will be populated here -->
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="section">
+                    <h2>Delay Effects</h2>
+                    <input type="number" id="delayTempo" placeholder="120" min="0" oninput="calculateDelayTimes()">
+                    
+                    <h3 style="margin: 1.5rem 0 1rem 0; font-size: 1.2rem;">Dotted Delays</h3>
+                    <div class="delay-grid">
+                        <div class="delay-item">
+                            <span class="delay-label">1/4 Dotted:</span>
+                            <span id="quarterDotted" class="delay-value">750.0 ms</span>
+                        </div>
+                        <div class="delay-item">
+                            <span class="delay-label">1/8 Dotted:</span>
+                            <span id="eighthDotted" class="delay-value">375.0 ms</span>
+                        </div>
+                        <div class="delay-item">
+                            <span class="delay-label">1/16 Dotted:</span>
+                            <span id="sixteenthDotted" class="delay-value">187.5 ms</span>
+                        </div>
+                    </div>
+
+                    <h3 style="margin: 1.5rem 0 1rem 0; font-size: 1.2rem;">Ping-Pong Delays</h3>
+                    <div class="delay-grid">
+                        <div class="delay-item">
+                            <span class="delay-label">L-R (1/8):</span>
+                            <span id="pingPongEighth" class="delay-value">250.0 ms</span>
+                        </div>
+                        <div class="delay-item">
+                            <span class="delay-label">L-R (1/16):</span>
+                            <span id="pingPongSixteenth" class="delay-value">125.0 ms</span>
+                        </div>
+                    </div>
+
+                    <h3 style="margin: 1.5rem 0 1rem 0; font-size: 1.2rem;">Multi-Tap Pattern</h3>
+                    <div class="multitap-container">
+                        <div class="delay-item">
+                            <span class="delay-label">Tap 1 (1/8):</span>
+                            <span id="tap1" class="delay-value">250.0 ms</span>
+                        </div>
+                        <div class="delay-item">
+                            <span class="delay-label">Tap 2 (1/4):</span>
+                            <span id="tap2" class="delay-value">500.0 ms</span>
+                        </div>
+                        <div class="delay-item">
+                            <span class="delay-label">Tap 3 (1/2):</span>
+                            <span id="tap3" class="delay-value">1000.0 ms</span>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="section">
+                    <h2>Rhythm/Groove</h2>
+                    
+                    <h3 style="margin: 1.5rem 0 1rem 0; font-size: 1.2rem;">Swing Timing</h3>
+                    <div class="input-group">
+                        <label>BPM:</label>
+                        <input type="number" id="swingBpm" placeholder="120" min="0" oninput="calculateSwing()">
+                    </div>
+                    <div class="input-group">
+                        <label>Swing %:</label>
+                        <input type="number" id="swingPercent" placeholder="16" min="0" max="50" oninput="calculateSwing()">
+                    </div>
+                    <div class="swing-results">
+                        <div class="math-result">
+                            <span class="math-label">Straight 16th:</span>
+                            <span id="straight16th" class="math-value">125.0 ms</span>
+                        </div>
+                        <div class="math-result">
+                            <span class="math-label">Swing 16th:</span>
+                            <span id="swing16th" class="math-value">145.0 ms</span>
+                        </div>
+                    </div>
+
+                    <h3 style="margin: 1.5rem 0 1rem 0; font-size: 1.2rem;">Polyrhythm</h3>
+                    <div class="input-group">
+                        <label>Rhythm A:</label>
+                        <input type="number" id="polyRhythmA" placeholder="3" min="1" oninput="calculatePolyrhythm()">
+                    </div>
+                    <div class="input-group">
+                        <label>Rhythm B:</label>
+                        <input type="number" id="polyRhythmB" placeholder="4" min="1" oninput="calculatePolyrhythm()">
+                    </div>
+                    <div class="input-group">
+                        <label>Pattern:</label>
+                        <span id="polyrhythmPattern">3 against 4</span>
+                    </div>
+                    <div class="input-group">
+                        <label>Cycle Length:</label>
+                        <span id="polyrhythmCycle">12 beats</span>
+                    </div>
+
+                    <h3 style="margin: 1.5rem 0 1rem 0; font-size: 1.2rem;">Click Patterns</h3>
+                    <div class="input-group">
+                        <label>Time Signature:</label>
+                        <select id="timeSignature" onchange="generateClickPattern()">
+                            <option value="4/4" selected>4/4</option>
+                            <option value="3/4">3/4</option>
+                            <option value="7/8">7/8</option>
+                            <option value="5/4">5/4</option>
+                        </select>
+                    </div>
+                    <div class="input-group">
+                        <label>Pattern:</label>
+                        <span id="clickPattern">CLICK click click click</span>
+                    </div>
                 </div>
             </div>
+        </div>
 
-            <div class="section">
-                <h2>Pitch → Tempo</h2>
-                <div class="input-group">
-                    <label>Original Tempo:</label>
-                    <input type="number" id="originalTempo" placeholder="120" min="0" oninput="calculatePitchTempo()">
+        <!-- Sampling & Pitch Tab -->
+        <div class="tab-content" id="sampling">
+            <div class="grid">
+                <div class="section">
+                    <h2>Pitch → Tempo</h2>
+                    <div class="input-group">
+                        <label>Original Tempo:</label>
+                        <input type="number" id="originalTempo" placeholder="120" min="0" oninput="calculatePitchTempo()">
+                    </div>
+                    <div class="input-group">
+                        <label>Pitch Change:</label>
+                        <input type="number" id="pitchChange" placeholder="0" step="0.1" oninput="calculatePitchTempo()">
+                    </div>
+                    <div class="input-group">
+                        <label>New Tempo:</label>
+                        <span id="newTempo">120.0 BPM</span>
+                    </div>
                 </div>
-                <div class="input-group">
-                    <label>Pitch Change:</label>
-                    <input type="number" id="pitchChange" placeholder="0" step="0.1" oninput="calculatePitchTempo()">
+
+                <div class="section">
+                    <h2>Tempo → Pitch</h2>
+                    <div class="input-group">
+                        <label>Original Tempo:</label>
+                        <input type="number" id="originalTempo2" placeholder="120" min="0" oninput="calculateTempoToPitch()">
+                    </div>
+                    <div class="input-group">
+                        <label>New Tempo:</label>
+                        <input type="number" id="newTempoInput" placeholder="120" min="0" oninput="calculateTempoToPitch()">
+                    </div>
+                    <div class="input-group">
+                        <label>Pitch Change:</label>
+                        <span id="pitchResult">0.0 semitones</span>
+                    </div>
                 </div>
-                <div class="input-group">
-                    <label>New Tempo:</label>
-                    <span id="newTempo">120.0 BPM</span>
+
+                <div class="section">
+                    <h2>Audio Math</h2>
+                    
+                    <h3 style="margin: 1.5rem 0 1rem 0; font-size: 1.2rem;">BPM to Hz</h3>
+                    <div class="input-group">
+                        <label>BPM:</label>
+                        <input type="number" id="bpmToHz" placeholder="120" min="0" oninput="calculateBpmToHz()">
+                    </div>
+                    <div class="audio-math-results">
+                        <div class="math-result">
+                            <span class="math-label">Quarter Note:</span>
+                            <span id="quarterHz" class="math-value">2.00 Hz</span>
+                        </div>
+                        <div class="math-result">
+                            <span class="math-label">Eighth Note:</span>
+                            <span id="eighthHz" class="math-value">4.00 Hz</span>
+                        </div>
+                        <div class="math-result">
+                            <span class="math-label">Sixteenth Note:</span>
+                            <span id="sixteenthHz" class="math-value">8.00 Hz</span>
+                        </div>
+                    </div>
+
+                    <h3 style="margin: 1.5rem 0 1rem 0; font-size: 1.2rem;">Cents to Ratio</h3>
+                    <div class="input-group">
+                        <label>Cents:</label>
+                        <input type="number" id="centsInput" placeholder="0" step="1" oninput="calculateCentsToRatio()">
+                    </div>
+                    <div class="input-group">
+                        <label>Frequency Ratio:</label>
+                        <span id="centsRatio">1.000</span>
+                    </div>
+
+                    <h3 style="margin: 1.5rem 0 1rem 0; font-size: 1.2rem;">dB to Gain</h3>
+                    <div class="input-group">
+                        <label>dB:</label>
+                        <input type="number" id="dbInput" placeholder="0" step="0.1" oninput="calculateDbToGain()">
+                    </div>
+                    <div class="input-group">
+                        <label>Linear Gain:</label>
+                        <span id="gainValue">1.000</span>
+                    </div>
+
+                    <h3 style="margin: 1.5rem 0 1rem 0; font-size: 1.2rem;">Sample Rate Ratios</h3>
+                    <div class="input-group">
+                        <label>Original Rate:</label>
+                        <input type="number" id="originalRate" placeholder="44100" min="0" oninput="calculateSampleRateRatio()">
+                    </div>
+                    <div class="input-group">
+                        <label>Target Rate:</label>
+                        <input type="number" id="targetRate" placeholder="48000" min="0" oninput="calculateSampleRateRatio()">
+                    </div>
+                    <div class="input-group">
+                        <label>Conversion Ratio:</label>
+                        <span id="sampleRatio">1.088</span>
+                    </div>
+                    <div class="input-group">
+                        <label>Pitch Change:</label>
+                        <span id="samplePitchChange">+150.6 cents</span>
+                    </div>
+
+                    <h3 style="margin: 1.5rem 0 1rem 0; font-size: 1.2rem;">Tape Speed</h3>
+                    <div class="input-group">
+                        <label>Speed Change (%):</label>
+                        <input type="number" id="tapeSpeed" placeholder="0" step="0.1" oninput="calculateTapeSpeed()">
+                    </div>
+                    <div class="input-group">
+                        <label>Pitch Change:</label>
+                        <span id="tapeSpeedPitch">0.0 cents</span>
+                    </div>
+                    <div class="input-group">
+                        <label>Tempo Change:</label>
+                        <span id="tapeSpeedTempo">0.0%</span>
+                    </div>
                 </div>
             </div>
+        </div>
 
-            <div class="section">
-                <h2>Tempo → Pitch</h2>
-                <div class="input-group">
-                    <label>Original Tempo:</label>
-                    <input type="number" id="originalTempo2" placeholder="120" min="0" oninput="calculateTempoToPitch()">
+        <!-- Music Theory Tab -->
+        <div class="tab-content" id="music">
+            <div class="grid">
+                <div class="section">
+                    <h2>Key/Scale Tools</h2>
+                    
+                    <h3 style="margin: 1.5rem 0 1rem 0; font-size: 1.2rem;">Key Detection</h3>
+                    <div class="input-group">
+                        <label>Notes (C D E F...):</label>
+                        <input type="text" id="keyDetectionInput" placeholder="C D E F G A B" oninput="detectKey()">
+                    </div>
+                    <div class="input-group">
+                        <label>Likely Key:</label>
+                        <span id="detectedKey">C Major</span>
+                    </div>
+
+                    <h3 style="margin: 1.5rem 0 1rem 0; font-size: 1.2rem;">Harmonic Mixing</h3>
+                    <div class="input-group">
+                        <label>Current Key:</label>
+                        <select id="currentKey" onchange="showCompatibleKeys()">
+                            <option value="1A">1A - A♭ Minor</option>
+                            <option value="1B">1B - B Major</option>
+                            <option value="2A">2A - E♭ Minor</option>
+                            <option value="2B">2B - F♯ Major</option>
+                            <option value="3A">3A - B♭ Minor</option>
+                            <option value="3B">3B - D♭ Major</option>
+                            <option value="4A">4A - F Minor</option>
+                            <option value="4B">4B - A♭ Major</option>
+                            <option value="5A">5A - C Minor</option>
+                            <option value="5B" selected>5B - E♭ Major</option>
+                            <option value="6A">6A - G Minor</option>
+                            <option value="6B">6B - B♭ Major</option>
+                            <option value="7A">7A - D Minor</option>
+                            <option value="7B">7B - F Major</option>
+                            <option value="8A">8A - A Minor</option>
+                            <option value="8B">8B - C Major</option>
+                            <option value="9A">9A - E Minor</option>
+                            <option value="9B">9B - G Major</option>
+                            <option value="10A">10A - B Minor</option>
+                            <option value="10B">10B - D Major</option>
+                            <option value="11A">11A - F♯ Minor</option>
+                            <option value="11B">11B - A Major</option>
+                            <option value="12A">12A - D♭ Minor</option>
+                            <option value="12B">12B - E Major</option>
+                        </select>
+                    </div>
+                    <div class="input-group">
+                        <label>Compatible Keys:</label>
+                        <span id="compatibleKeys">4B, 5A, 6B</span>
+                    </div>
+
+                    <h3 style="margin: 1.5rem 0 1rem 0; font-size: 1.2rem;">Scale Degrees</h3>
+                    <div class="input-group">
+                        <label>Root Note:</label>
+                        <select id="scaleRoot" onchange="calculateScaleDegrees()">
+                            <option value="C" selected>C</option>
+                            <option value="C#">C#</option>
+                            <option value="D">D</option>
+                            <option value="D#">D#</option>
+                            <option value="E">E</option>
+                            <option value="F">F</option>
+                            <option value="F#">F#</option>
+                            <option value="G">G</option>
+                            <option value="G#">G#</option>
+                            <option value="A">A</option>
+                            <option value="A#">A#</option>
+                            <option value="B">B</option>
+                        </select>
+                    </div>
+                    <div class="input-group">
+                        <label>Scale Type:</label>
+                        <select id="scaleType" onchange="calculateScaleDegrees()">
+                            <option value="major" selected>Major</option>
+                            <option value="minor">Natural Minor</option>
+                            <option value="dorian">Dorian</option>
+                            <option value="mixolydian">Mixolydian</option>
+                        </select>
+                    </div>
+                    <div class="input-group">
+                        <label>Scale Notes:</label>
+                        <span id="scaleNotes">C D E F G A B</span>
+                    </div>
                 </div>
-                <div class="input-group">
-                    <label>New Tempo:</label>
-                    <input type="number" id="newTempoInput" placeholder="120" min="0" oninput="calculateTempoToPitch()">
+
+                <div class="section">
+                    <h2>Production Helpers</h2>
+                    
+                    <h3 style="margin: 1.5rem 0 1rem 0; font-size: 1.2rem;">Golden Ratio</h3>
+                    <div class="input-group">
+                        <label>Total Length (bars):</label>
+                        <input type="number" id="totalBars" placeholder="32" min="1" oninput="calculateGoldenRatio()">
+                    </div>
+                    <div class="golden-results">
+                        <div class="math-result">
+                            <span class="math-label">Section A:</span>
+                            <span id="sectionA" class="math-value">19.8 bars</span>
+                        </div>
+                        <div class="math-result">
+                            <span class="math-label">Section B:</span>
+                            <span id="sectionB" class="math-value">12.2 bars</span>
+                        </div>
+                    </div>
+
+                    <h3 style="margin: 1.5rem 0 1rem 0; font-size: 1.2rem;">Room Modes</h3>
+                    <div class="input-group">
+                        <label>Room Length (m):</label>
+                        <input type="number" id="roomLength" placeholder="5" step="0.1" oninput="calculateRoomModes()">
+                    </div>
+                    <div class="input-group">
+                        <label>Room Width (m):</label>
+                        <input type="number" id="roomWidth" placeholder="4" step="0.1" oninput="calculateRoomModes()">
+                    </div>
+                    <div class="input-group">
+                        <label>Room Height (m):</label>
+                        <input type="number" id="roomHeight" placeholder="3" step="0.1" oninput="calculateRoomModes()">
+                    </div>
+                    <div class="room-modes" id="roomModes">
+                        <!-- Room modes will be populated here -->
+                    </div>
                 </div>
-                <div class="input-group">
-                    <label>Pitch Change:</label>
-                    <span id="pitchResult">0.0 semitones</span>
+            </div>
+        </div>
+
+        <!-- Technical Tab -->
+        <div class="tab-content" id="technical">
+            <div class="grid">
+                <div class="section">
+                    <h2>Audio Technical</h2>
+                    
+                    <h3 style="margin: 1.5rem 0 1rem 0; font-size: 1.2rem;">LUFS Reference</h3>
+                    <div class="reference-grid">
+                        <div class="ref-item">
+                            <span class="ref-label">Spotify:</span>
+                            <span class="ref-value">-14 LUFS</span>
+                        </div>
+                        <div class="ref-item">
+                            <span class="ref-label">Apple Music:</span>
+                            <span class="ref-value">-16 LUFS</span>
+                        </div>
+                        <div class="ref-item">
+                            <span class="ref-label">YouTube:</span>
+                            <span class="ref-value">-14 LUFS</span>
+                        </div>
+                        <div class="ref-item">
+                            <span class="ref-label">Broadcast:</span>
+                            <span class="ref-value">-23 LUFS</span>
+                        </div>
+                    </div>
+
+                    <h3 style="margin: 1.5rem 0 1rem 0; font-size: 1.2rem;">Frequency to Note</h3>
+                    <div class="input-group">
+                        <label>Frequency (Hz):</label>
+                        <input type="number" id="freqInput" placeholder="440" step="0.1" oninput="frequencyToNote()">
+                    </div>
+                    <div class="input-group">
+                        <label>Nearest Note:</label>
+                        <span id="nearestNote">A4 (440.0 Hz)</span>
+                    </div>
+                    <div class="input-group">
+                        <label>Cents Off:</label>
+                        <span id="centsOff">0.0 cents</span>
+                    </div>
+
+                    <h3 style="margin: 1.5rem 0 1rem 0; font-size: 1.2rem;">Harmonic Series</h3>
+                    <div class="input-group">
+                        <label>Fundamental (Hz):</label>
+                        <input type="number" id="fundamentalFreq" placeholder="100" step="0.1" oninput="calculateHarmonics()">
+                    </div>
+                    <div class="harmonics-grid" id="harmonicsGrid">
+                        <!-- Harmonics will be populated here -->
+                    </div>
+                </div>
+
+                <div class="section">
+                    <h2>Hardware Sync</h2>
+                    
+                    <h3 style="margin: 1.5rem 0 1rem 0; font-size: 1.2rem;">MIDI Clock</h3>
+                    <div class="input-group">
+                        <label>BPM:</label>
+                        <input type="number" id="midiClockBpm" placeholder="120" min="0" oninput="calculateMidiClock()">
+                    </div>
+                    <div class="sync-results">
+                        <div class="math-result">
+                            <span class="math-label">Clock Rate:</span>
+                            <span id="midiClockRate" class="math-value">24.0 ppq</span>
+                        </div>
+                        <div class="math-result">
+                            <span class="math-label">Interval:</span>
+                            <span id="midiClockInterval" class="math-value">10.4 ms</span>
+                        </div>
+                    </div>
+
+                    <h3 style="margin: 1.5rem 0 1rem 0; font-size: 1.2rem;">DIN Sync (24ppq)</h3>
+                    <div class="input-group">
+                        <label>BPM:</label>
+                        <input type="number" id="dinSyncBpm" placeholder="120" min="0" oninput="calculateDinSync()">
+                    </div>
+                    <div class="input-group">
+                        <label>Clock Interval:</label>
+                        <span id="dinSyncInterval">20.8 ms</span>
+                    </div>
+
+                    <h3 style="margin: 1.5rem 0 1rem 0; font-size: 1.2rem;">CV/Gate Timing</h3>
+                    <div class="input-group">
+                        <label>Gate Length (%):</label>
+                        <input type="number" id="gateLength" placeholder="50" min="1" max="100" oninput="calculateCvGate()">
+                    </div>
+                    <div class="input-group">
+                        <label>BPM:</label>
+                        <input type="number" id="cvGateBpm" placeholder="120" min="0" oninput="calculateCvGate()">
+                    </div>
+                    <div class="input-group">
+                        <label>Gate Duration:</label>
+                        <span id="gateDuration">250.0 ms</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- References Tab -->
+        <div class="tab-content" id="reference">
+            <div class="grid">
+                <div class="section">
+                    <h2>Quick References</h2>
+                    
+                    <h3 style="margin: 1.5rem 0 1rem 0; font-size: 1.2rem;">Audio Formats</h3>
+                    <div class="reference-grid">
+                        <div class="ref-item">
+                            <span class="ref-label">CD Quality:</span>
+                            <span class="ref-value">44.1kHz/16-bit</span>
+                        </div>
+                        <div class="ref-item">
+                            <span class="ref-label">Studio:</span>
+                            <span class="ref-value">48kHz/24-bit</span>
+                        </div>
+                        <div class="ref-item">
+                            <span class="ref-label">Hi-Res:</span>
+                            <span class="ref-value">96kHz/24-bit</span>
+                        </div>
+                        <div class="ref-item">
+                            <span class="ref-label">Archive:</span>
+                            <span class="ref-value">192kHz/32-bit</span>
+                        </div>
+                    </div>
+
+                    <h3 style="margin: 1.5rem 0 1rem 0; font-size: 1.2rem;">Standard Tunings</h3>
+                    <div class="reference-grid">
+                        <div class="ref-item">
+                            <span class="ref-label">A440 (Standard):</span>
+                            <span class="ref-value">440.0 Hz</span>
+                        </div>
+                        <div class="ref-item">
+                            <span class="ref-label">A432 (Alt):</span>
+                            <span class="ref-value">432.0 Hz</span>
+                        </div>
+                        <div class="ref-item">
+                            <span class="ref-label">A415 (Baroque):</span>
+                            <span class="ref-value">415.0 Hz</span>
+                        </div>
+                        <div class="ref-item">
+                            <span class="ref-label">A444 (High):</span>
+                            <span class="ref-value">444.0 Hz</span>
+                        </div>
+                    </div>
+
+                    <h3 style="margin: 1.5rem 0 1rem 0; font-size: 1.2rem;">Cable Impedance</h3>
+                    <div class="reference-grid">
+                        <div class="ref-item">
+                            <span class="ref-label">Guitar Cable:</span>
+                            <span class="ref-value">Hi-Z (1MΩ)</span>
+                        </div>
+                        <div class="ref-item">
+                            <span class="ref-label">Mic (XLR):</span>
+                            <span class="ref-value">Lo-Z (150Ω)</span>
+                        </div>
+                        <div class="ref-item">
+                            <span class="ref-label">Line Level:</span>
+                            <span class="ref-value">10kΩ</span>
+                        </div>
+                        <div class="ref-item">
+                            <span class="ref-label">Speaker:</span>
+                            <span class="ref-value">4-16Ω</span>
+                        </div>
+                    </div>
                 </div>
             </div>
         </div>
@@ -279,6 +962,48 @@
             });
         }
 
+        function calculatePreDelay() {
+            const tempoInput = document.getElementById('tempo');
+            let tempo = parseFloat(tempoInput.value);
+            if (isNaN(tempo) || tempo <= 0) {
+                tempo = 120; // Default tempo if input is invalid
+            }
+
+            const beatDuration = 60000 / tempo; // Duration of a quarter note in milliseconds
+
+            // Pre-delay values - typically shorter note values for tight timing
+            const preDelayNotes = [
+                { name: 'Quarter Note', multiplier: 1 },
+                { name: 'Eighth Note', multiplier: 0.5 },
+                { name: 'Sixteenth Note', multiplier: 0.25 },
+                { name: 'Thirty-Second Note', multiplier: 0.125 },
+                { name: 'Dotted Quarter', multiplier: 1.5 },
+                { name: 'Dotted Eighth', multiplier: 0.75 },
+                { name: 'Dotted Sixteenth', multiplier: 0.375 },
+                { name: 'Triplet Quarter', multiplier: 0.6667 },
+                { name: 'Triplet Eighth', multiplier: 0.3333 },
+                { name: 'Triplet Sixteenth', multiplier: 0.1667 }
+            ];
+
+            const preDelayTableBody = document.getElementById('preDelayTableBody');
+            preDelayTableBody.innerHTML = ''; // Clear previous results
+
+            preDelayNotes.forEach(note => {
+                const time = beatDuration * note.multiplier;
+                const row = document.createElement('tr');
+
+                const noteCell = document.createElement('td');
+                noteCell.textContent = note.name;
+                row.appendChild(noteCell);
+
+                const timeCell = document.createElement('td');
+                timeCell.textContent = time.toFixed(2);
+                row.appendChild(timeCell);
+
+                preDelayTableBody.appendChild(row);
+            });
+        }
+
         function calculatePitchTempo() {
             const originalTempo = parseFloat(document.getElementById('originalTempo').value) || 120;
             const pitchChange = parseFloat(document.getElementById('pitchChange').value) || 0;
@@ -299,11 +1024,358 @@
             document.getElementById('pitchResult').textContent = semitones.toFixed(1) + ' semitones';
         }
 
+        function calculateDelayTimes() {
+            const tempo = parseFloat(document.getElementById('delayTempo').value) || 120;
+            const beatDuration = 60000 / tempo; // Quarter note in ms
+            
+            // Dotted delays (note + half of note = 1.5x)
+            document.getElementById('quarterDotted').textContent = (beatDuration * 1.5).toFixed(1) + ' ms';
+            document.getElementById('eighthDotted').textContent = (beatDuration * 0.75).toFixed(1) + ' ms';
+            document.getElementById('sixteenthDotted').textContent = (beatDuration * 0.375).toFixed(1) + ' ms';
+            
+            // Ping-pong delays (L-R alternating)
+            document.getElementById('pingPongEighth').textContent = (beatDuration * 0.5).toFixed(1) + ' ms';
+            document.getElementById('pingPongSixteenth').textContent = (beatDuration * 0.25).toFixed(1) + ' ms';
+            
+            // Multi-tap pattern
+            document.getElementById('tap1').textContent = (beatDuration * 0.5).toFixed(1) + ' ms';
+            document.getElementById('tap2').textContent = (beatDuration * 1).toFixed(1) + ' ms';
+            document.getElementById('tap3').textContent = (beatDuration * 2).toFixed(1) + ' ms';
+        }
+
+        function calculateBpmToHz() {
+            const bpm = parseFloat(document.getElementById('bpmToHz').value) || 120;
+            
+            // Convert BPM to Hz for different note values
+            const quarterHz = bpm / 60; // Quarter notes per second
+            const eighthHz = quarterHz * 2; // Eighth notes per second
+            const sixteenthHz = quarterHz * 4; // Sixteenth notes per second
+            
+            document.getElementById('quarterHz').textContent = quarterHz.toFixed(2) + ' Hz';
+            document.getElementById('eighthHz').textContent = eighthHz.toFixed(2) + ' Hz';
+            document.getElementById('sixteenthHz').textContent = sixteenthHz.toFixed(2) + ' Hz';
+        }
+
+        function calculateCentsToRatio() {
+            const cents = parseFloat(document.getElementById('centsInput').value) || 0;
+            
+            // Formula: ratio = 2^(cents/1200)
+            const ratio = Math.pow(2, cents / 1200);
+            
+            document.getElementById('centsRatio').textContent = ratio.toFixed(3);
+        }
+
+        function calculateDbToGain() {
+            const db = parseFloat(document.getElementById('dbInput').value) || 0;
+            
+            // Formula: gain = 10^(dB/20)
+            const gain = Math.pow(10, db / 20);
+            
+            document.getElementById('gainValue').textContent = gain.toFixed(3);
+        }
+
+        function calculateSampleRateRatio() {
+            const originalRate = parseFloat(document.getElementById('originalRate').value) || 44100;
+            const targetRate = parseFloat(document.getElementById('targetRate').value) || 48000;
+            
+            const ratio = targetRate / originalRate;
+            
+            // Convert ratio to cents: cents = 1200 * log2(ratio)
+            const cents = 1200 * Math.log2(ratio);
+            
+            document.getElementById('sampleRatio').textContent = ratio.toFixed(3);
+            
+            const centsText = cents >= 0 ? '+' + cents.toFixed(1) : cents.toFixed(1);
+            document.getElementById('samplePitchChange').textContent = centsText + ' cents';
+        }
+
+        // Key/Scale Tools Functions
+        function detectKey() {
+            const input = document.getElementById('keyDetectionInput').value.toUpperCase();
+            const notes = input.split(' ').filter(n => n.length > 0);
+            
+            const majorScales = {
+                'C': ['C', 'D', 'E', 'F', 'G', 'A', 'B'],
+                'G': ['G', 'A', 'B', 'C', 'D', 'E', 'F#'],
+                'D': ['D', 'E', 'F#', 'G', 'A', 'B', 'C#'],
+                'A': ['A', 'B', 'C#', 'D', 'E', 'F#', 'G#'],
+                'E': ['E', 'F#', 'G#', 'A', 'B', 'C#', 'D#'],
+                'F': ['F', 'G', 'A', 'Bb', 'C', 'D', 'E'],
+                'Bb': ['Bb', 'C', 'D', 'Eb', 'F', 'G', 'A'],
+                'Eb': ['Eb', 'F', 'G', 'Ab', 'Bb', 'C', 'D']
+            };
+            
+            let bestMatch = 'C Major';
+            let maxMatches = 0;
+            
+            for (const [key, scale] of Object.entries(majorScales)) {
+                const matches = notes.filter(note => scale.includes(note)).length;
+                if (matches > maxMatches) {
+                    maxMatches = matches;
+                    bestMatch = key + ' Major';
+                }
+            }
+            
+            document.getElementById('detectedKey').textContent = bestMatch;
+        }
+
+        function showCompatibleKeys() {
+            const current = document.getElementById('currentKey').value;
+            const keyNum = parseInt(current.substring(0, current.length - 1));
+            const keyType = current.substring(current.length - 1);
+            
+            let compatible = [];
+            
+            // Same number (parallel major/minor)
+            compatible.push(keyNum + (keyType === 'A' ? 'B' : 'A'));
+            
+            // Adjacent keys (+/-1)
+            const prev = keyNum === 1 ? 12 : keyNum - 1;
+            const next = keyNum === 12 ? 1 : keyNum + 1;
+            compatible.push(prev + keyType);
+            compatible.push(next + keyType);
+            
+            document.getElementById('compatibleKeys').textContent = compatible.join(', ');
+        }
+
+        function calculateScaleDegrees() {
+            const root = document.getElementById('scaleRoot').value;
+            const scaleType = document.getElementById('scaleType').value;
+            
+            const chromatic = ['C', 'C#', 'D', 'D#', 'E', 'F', 'F#', 'G', 'G#', 'A', 'A#', 'B'];
+            const rootIndex = chromatic.indexOf(root);
+            
+            const intervals = {
+                major: [0, 2, 4, 5, 7, 9, 11],
+                minor: [0, 2, 3, 5, 7, 8, 10],
+                dorian: [0, 2, 3, 5, 7, 9, 10],
+                mixolydian: [0, 2, 4, 5, 7, 9, 10]
+            };
+            
+            const scale = intervals[scaleType].map(interval => 
+                chromatic[(rootIndex + interval) % 12]
+            );
+            
+            document.getElementById('scaleNotes').textContent = scale.join(' ');
+        }
+
+        // Rhythm/Groove Functions
+        function calculateSwing() {
+            const bpm = parseFloat(document.getElementById('swingBpm').value) || 120;
+            const swingPercent = parseFloat(document.getElementById('swingPercent').value) || 16;
+            
+            const sixteenthNote = (60000 / bpm) / 4; // 16th note duration
+            const swingRatio = (50 + swingPercent) / 50; // Convert percentage to ratio
+            
+            const swingSixteenth = sixteenthNote * swingRatio;
+            
+            document.getElementById('straight16th').textContent = sixteenthNote.toFixed(1) + ' ms';
+            document.getElementById('swing16th').textContent = swingSixteenth.toFixed(1) + ' ms';
+        }
+
+        function calculatePolyrhythm() {
+            const a = parseInt(document.getElementById('polyRhythmA').value) || 3;
+            const b = parseInt(document.getElementById('polyRhythmB').value) || 4;
+            
+            // LCM calculation
+            const gcd = (a, b) => b === 0 ? a : gcd(b, a % b);
+            const lcm = (a * b) / gcd(a, b);
+            
+            document.getElementById('polyrhythmPattern').textContent = a + ' against ' + b;
+            document.getElementById('polyrhythmCycle').textContent = lcm + ' beats';
+        }
+
+        function generateClickPattern() {
+            const timeSig = document.getElementById('timeSignature').value;
+            const patterns = {
+                '4/4': 'CLICK click click click',
+                '3/4': 'CLICK click click',
+                '7/8': 'CLICK click CLICK click CLICK click click',
+                '5/4': 'CLICK click click CLICK click'
+            };
+            
+            document.getElementById('clickPattern').textContent = patterns[timeSig];
+        }
+
+        // Audio Technical Functions
+        function frequencyToNote() {
+            const freq = parseFloat(document.getElementById('freqInput').value) || 440;
+            
+            // A4 = 440Hz, note number 69
+            const noteNumber = Math.round(12 * Math.log2(freq / 440) + 69);
+            const noteNames = ['C', 'C#', 'D', 'D#', 'E', 'F', 'F#', 'G', 'G#', 'A', 'A#', 'B'];
+            
+            const octave = Math.floor(noteNumber / 12) - 1;
+            const noteName = noteNames[noteNumber % 12];
+            
+            const exactFreq = 440 * Math.pow(2, (noteNumber - 69) / 12);
+            const cents = 1200 * Math.log2(freq / exactFreq);
+            
+            document.getElementById('nearestNote').textContent = 
+                noteName + octave + ' (' + exactFreq.toFixed(1) + ' Hz)';
+            
+            const centsText = cents >= 0 ? '+' + cents.toFixed(1) : cents.toFixed(1);
+            document.getElementById('centsOff').textContent = centsText + ' cents';
+        }
+
+        function calculateHarmonics() {
+            const fundamental = parseFloat(document.getElementById('fundamentalFreq').value) || 100;
+            const grid = document.getElementById('harmonicsGrid');
+            
+            grid.innerHTML = '';
+            
+            for (let i = 1; i <= 8; i++) {
+                const harmonic = fundamental * i;
+                const div = document.createElement('div');
+                div.className = 'harmonic-item';
+                div.innerHTML = 
+                    '<span class="math-label">H' + i + ':</span>' +
+                    '<span class="math-value">' + harmonic.toFixed(1) + ' Hz</span>';
+                grid.appendChild(div);
+            }
+        }
+
+        // Hardware Sync Functions
+        function calculateMidiClock() {
+            const bpm = parseFloat(document.getElementById('midiClockBpm').value) || 120;
+            
+            // MIDI clock sends 24 pulses per quarter note
+            const pulsesPerSecond = (bpm / 60) * 24;
+            const interval = 1000 / pulsesPerSecond;
+            
+            document.getElementById('midiClockRate').textContent = '24.0 ppq';
+            document.getElementById('midiClockInterval').textContent = interval.toFixed(1) + ' ms';
+        }
+
+        function calculateDinSync() {
+            const bpm = parseFloat(document.getElementById('dinSyncBpm').value) || 120;
+            
+            // DIN sync sends 24 pulses per quarter note
+            const pulsesPerSecond = (bpm / 60) * 24;
+            const interval = 1000 / pulsesPerSecond;
+            
+            document.getElementById('dinSyncInterval').textContent = interval.toFixed(1) + ' ms';
+        }
+
+        function calculateCvGate() {
+            const gatePercent = parseFloat(document.getElementById('gateLength').value) || 50;
+            const bpm = parseFloat(document.getElementById('cvGateBpm').value) || 120;
+            
+            const quarterNote = 60000 / bpm;
+            const gateDuration = (quarterNote * gatePercent) / 100;
+            
+            document.getElementById('gateDuration').textContent = gateDuration.toFixed(1) + ' ms';
+        }
+
+        // Production Helpers Functions
+        function calculateGoldenRatio() {
+            const total = parseFloat(document.getElementById('totalBars').value) || 32;
+            
+            const phi = 1.618033988749895;
+            const sectionA = total / phi;
+            const sectionB = total - sectionA;
+            
+            document.getElementById('sectionA').textContent = sectionA.toFixed(1) + ' bars';
+            document.getElementById('sectionB').textContent = sectionB.toFixed(1) + ' bars';
+        }
+
+        function calculateRoomModes() {
+            const length = parseFloat(document.getElementById('roomLength').value) || 5;
+            const width = parseFloat(document.getElementById('roomWidth').value) || 4;
+            const height = parseFloat(document.getElementById('roomHeight').value) || 3;
+            
+            const speedOfSound = 343; // m/s at 20°C
+            const modesContainer = document.getElementById('roomModes');
+            modesContainer.innerHTML = '';
+            
+            // Calculate axial modes for each dimension
+            const dimensions = [
+                { name: 'Length', value: length },
+                { name: 'Width', value: width },
+                { name: 'Height', value: height }
+            ];
+            
+            dimensions.forEach(dim => {
+                for (let n = 1; n <= 3; n++) {
+                    const frequency = (n * speedOfSound) / (2 * dim.value);
+                    const div = document.createElement('div');
+                    div.className = 'room-mode-item';
+                    div.innerHTML = 
+                        '<span class="math-label">' + dim.name + ' (' + n + '):</span>' +
+                        '<span class="math-value">' + frequency.toFixed(1) + ' Hz</span>';
+                    modesContainer.appendChild(div);
+                }
+            });
+        }
+
+        function calculateTapeSpeed() {
+            const speedChange = parseFloat(document.getElementById('tapeSpeed').value) || 0;
+            
+            // Speed change affects both pitch and tempo equally
+            const cents = 1200 * Math.log2((100 + speedChange) / 100);
+            
+            document.getElementById('tapeSpeedPitch').textContent = 
+                (cents >= 0 ? '+' : '') + cents.toFixed(1) + ' cents';
+            document.getElementById('tapeSpeedTempo').textContent = 
+                (speedChange >= 0 ? '+' : '') + speedChange.toFixed(1) + '%';
+        }
+
+        // Tab switching functionality
+        function switchTab(tabName) {
+            // Hide all tab contents
+            const tabContents = document.querySelectorAll('.tab-content');
+            tabContents.forEach(content => {
+                content.classList.remove('active');
+            });
+            
+            // Remove active class from all tabs
+            const tabs = document.querySelectorAll('.tab');
+            tabs.forEach(tab => {
+                tab.classList.remove('active');
+            });
+            
+            // Show selected tab content
+            document.getElementById(tabName).classList.add('active');
+            
+            // Add active class to clicked tab
+            event.target.classList.add('active');
+        }
+
         // Initial calculations on page load
         window.onload = function() {
             calculateTimes();
+            calculatePreDelay();
             calculatePitchTempo();
             calculateTempoToPitch();
+            calculateDelayTimes();
+            calculateBpmToHz();
+            calculateCentsToRatio();
+            calculateDbToGain();
+            calculateSampleRateRatio();
+            
+            // Key/Scale Tools
+            detectKey();
+            showCompatibleKeys();
+            calculateScaleDegrees();
+            
+            // Rhythm/Groove
+            calculateSwing();
+            calculatePolyrhythm();
+            generateClickPattern();
+            
+            // Audio Technical
+            frequencyToNote();
+            calculateHarmonics();
+            
+            // Hardware Sync
+            calculateMidiClock();
+            calculateDinSync();
+            calculateCvGate();
+            
+            // Production Helpers
+            calculateGoldenRatio();
+            calculateRoomModes();
+            calculateTapeSpeed();
         };
     </script>
 </body>
